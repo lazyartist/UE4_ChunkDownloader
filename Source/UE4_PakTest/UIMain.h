@@ -23,4 +23,11 @@ class UE4_PAKTEST_API UUIMain : public UUserWidget
 
 	UFUNCTION()
 	void OnClicked();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void RequestContent_OnSucceeded(UObject* MobilePendingContent);
+	
+	UFUNCTION(BlueprintCallable)
+	void RequestContent_OnFailed(FText ErrorText, int32 ErrorCode);
 };

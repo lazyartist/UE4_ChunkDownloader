@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UIMain.h"
 #include "GameFramework/GameModeBase.h"
 #include "UE4_PakTestGameModeBase.generated.h"
 
@@ -17,5 +18,9 @@ class UE4_PAKTEST_API AUE4_PakTestGameModeBase : public AGameModeBase
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
 public:
-	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUIMain> UIMainClass;
+
+	UPROPERTY(EditAnywhere)
+	UUIMain* UIMain; 
 };

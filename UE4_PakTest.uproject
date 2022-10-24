@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{6A951A54-4FBE-CC4E-019C-D9B52F543E9C}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "UE4_PakTest",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

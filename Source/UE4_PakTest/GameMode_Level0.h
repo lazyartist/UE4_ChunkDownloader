@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UIMain.h"
+#include "UIMain_Level0.h"
 #include "GameFramework/GameModeBase.h"
-#include "UE4_PakTestGameModeBase.generated.h"
+#include "GameMode_Level0.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UE4_PAKTEST_API AUE4_PakTestGameModeBase : public AGameModeBase
+class UE4_PAKTEST_API AGameMode_Level0 : public AGameModeBase
 {
 	GENERATED_BODY()
 
@@ -19,8 +19,8 @@ class UE4_PAKTEST_API AUE4_PakTestGameModeBase : public AGameModeBase
 
 public:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UUIMain> UIMainClass;
+	TSubclassOf<UUIMain_Level0> UIMainClass;
 
 	UPROPERTY(EditAnywhere)
-	UUIMain* UIMain; 
+	UUIMain_Level0* UIMain; 
 };

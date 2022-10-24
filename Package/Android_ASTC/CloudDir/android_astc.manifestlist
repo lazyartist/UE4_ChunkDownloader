@@ -7,16 +7,8 @@
 			"uniqueFilename": "UE4_PakTest_pakchunk1release1.manifest",
 			"length": 938,
 			"URL": "UE4_PakTest_pakchunk1release1.manifest",
-			"hash": "32D43C64AF4207A7D8B692BA78EC432AE7E61412",
-			"hash256": "69D66A04E090016B932B7FF6147D4C7D5527BF711BF0765715F369FED6AB9AB9"
-		},
-		{
-			"filename": "UE4_PakTest_pakchunk9release1.manifest",
-			"uniqueFilename": "UE4_PakTest_pakchunk9release1.manifest",
-			"length": 938,
-			"URL": "UE4_PakTest_pakchunk9release1.manifest",
-			"hash": "6719CB4B03C5EB74F6406644850A735E7E96ACD2",
-			"hash256": "9529508DE290ABF4D5BEE3B4CD0C16527A14B418EFFEE79AA0178EB51ED89511"
+			"hash": "99FFFAC597CD9257D926CC2FE76D9401A3D5A712",
+			"hash256": "F9910A2CEB33DC2FBF02F8CEE9D07675AA07C4A3315449633B8F3C9DF8EC1F41"
 		}
 	]
 }

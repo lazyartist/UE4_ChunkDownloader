@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "UE4_PakTestGameModeBase.h"
+#include "GameMode_Level0.h"
 
-void AUE4_PakTestGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+void AGameMode_Level0::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
@@ -13,7 +13,7 @@ void AUE4_PakTestGameModeBase::InitGame(const FString& MapName, const FString& O
 	if(IsValid(UIMainClass))
 	{
 		UGameInstance* GameInstance = GetWorld()->GetGameInstance();
-		UIMain = Cast<UUIMain>(CreateWidget(GameInstance, UIMainClass, TEXT("UIMain")));
+		UIMain = Cast<UUIMain_Level0>(CreateWidget(GameInstance, UIMainClass, TEXT("UIMain")));
 	}
 
 	if(IsValid(UIMain))

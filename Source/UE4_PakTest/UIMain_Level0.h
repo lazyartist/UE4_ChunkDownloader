@@ -6,13 +6,13 @@
 #include "UObject/Object.h"
 #include "UMG.h"
 
-#include "UIMain.generated.h"
+#include "UIMain_Level0.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UE4_PAKTEST_API UUIMain : public UUserWidget
+class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -21,8 +21,14 @@ class UE4_PAKTEST_API UUIMain : public UUserWidget
 	UPROPERTY(meta=(BindWidgetOptional))
 	UButton* DownloadButton_BP = nullptr;
 
+	UPROPERTY(meta=(BindWidgetOptional))
+	UButton* NextLevelButton_BP = nullptr;
+
 	UFUNCTION()
-	void OnClicked();
+	void DownloadButton_OnClicked();
+
+	UFUNCTION()
+	void NextLevelButton_OnClicked();
 
 public:
 	UFUNCTION(BlueprintCallable)

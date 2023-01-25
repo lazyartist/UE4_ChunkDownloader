@@ -264,4 +264,3 @@ F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Number
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\NumbersN
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\W_UIMain_Level0
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\ShaderArchive-UE4_PakTest_Chunk0-GLSL_ES3_1_ANDROID.ushaderbytecode
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\ShaderArchive-UE4_PakTest_Chunk0-SF_VULKAN_ES31_ANDROID.ushaderbytecode

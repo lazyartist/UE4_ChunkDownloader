@@ -1,0 +1,4 @@
+$NUM_ENTRIES = 3
+pakchunk1000-Android_ASTC.pak	74524	ver01	-1	/
+pakchunk1001-Android_ASTC.pak	4054	ver01	-1	/
+pakchunk1002-Android_ASTC.pak	4054	ver01	-1	/

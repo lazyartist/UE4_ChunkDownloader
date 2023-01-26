@@ -1,14 +1,14 @@
 {
-	"ClientVersion": "release1",
-	"BuildUrl": "release1/Android_ASTC",
+	"ClientVersion": "Release",
+	"BuildUrl": "Release/Android_ASTC",
 	"files": [
 		{
-			"filename": "UE4_PakTest_pakchunk1release1.manifest",
-			"uniqueFilename": "UE4_PakTest_pakchunk1release1.manifest",
-			"length": 938,
-			"URL": "UE4_PakTest_pakchunk1release1.manifest",
-			"hash": "1F31214089540A0CF295C0B804B82C0FAA8F681B",
-			"hash256": "62118D78BE8669EC1EBBA15288C938BFD298DD0258D5BDC74E03654374CDE771"
+			"filename": "UE4_PakTest_pakchunk1001Release.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk1001Release.manifest",
+			"length": 943,
+			"URL": "UE4_PakTest_pakchunk1001Release.manifest",
+			"hash": "E4441F7BAAC9B779D92BFC99D90D8F31E72D255F",
+			"hash256": "35186252036406FBB1A2A538344F752267D2360FC0E58FA19DA6985DB93505C5"
 		}
 	]
 }

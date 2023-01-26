@@ -1,7 +1,0 @@
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Pak\BP_GameMode_Level1
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Pak\Chunks1
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Pak\Level1
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Pak\Level1_BuiltData
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Pak\M_Numbers1
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Pak\Numbers1
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\Pak\W_UIMain_Level1

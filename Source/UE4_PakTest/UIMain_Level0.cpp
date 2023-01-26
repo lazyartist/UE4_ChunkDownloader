@@ -3,10 +3,19 @@
 
 #include "UIMain_Level0.h"
 
+#include "CMChunkDownloader.h"
+#include "CMCommon.h"
+#include "CMGameInstance.h"
+
 void UUIMain_Level0::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
+	if(IsValid(DownloadButton_BP))
+	{
+		DownloadButton_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::DownloadButton_OnClicked);
+	}
+	
 	// if(IsValid(Download0Button_BP))
 	// {
 	// 	Download0Button_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::Download0Button_OnClicked);
@@ -36,6 +45,26 @@ void UUIMain_Level0::NativePreConstruct()
 	// {
 	// 	OpenLevel2Button_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::OpenLevel2Button_OnClicked);
 	// }
+}
+
+void UUIMain_Level0::DownloadButton_OnClicked()
+{
+	UCMGameInstance* GameInstance = Cast<UCMGameInstance>(GetWorld()->GetGameInstance());
+	if(false == IsValid(GameInstance))
+	{
+		CM_LOG(Error, "UPGGameInstance is Wrong!!!");
+		return;
+	}
+	
+	if(false == IsValid(mChunkDownloader))
+	{
+		mChunkDownloader = NewObject<UCMChunkDownloader>(this);
+	}
+	
+	if(IsValid(mChunkDownloader))
+	{
+		mChunkDownloader->InitPatchingSystem("Android", GameInstance->PatchVersionURL, GameInstance->ChunkDownloadList);
+	}
 }
 
 // void UUIMain_Level0::Download0Button_OnClicked()

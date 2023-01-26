@@ -244,8 +244,10 @@ F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\Engine\Plugins\Runtime\Ope
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\Engine\Plugins\Runtime\OpenXR\Content\Devices\ValveIndex\MRTexture
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\Engine\Plugins\Runtime\OpenXR\Content\Devices\ValveIndex\Right\MI_right_ValveIndex
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\Engine\Plugins\Runtime\OpenXR\Content\Devices\ValveIndex\Right\right_ValveIndexController
+F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\StartAssets\BP_GameInstance
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\StartAssets\BP_GameMode
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\StartAssets\PAL_StartAssets
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\StartAssets\StartLevel
-F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\StartAssets\W_UIMain
+F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\StartAssets\W_UIChunkDownloaderMainPage
+F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\StartAssets\W_UIHttpChunkInstallerMainPage
 F:\TestProjects\UE4_PakTest\Saved\Cooked\Android_ASTC\UE4_PakTest\Content\ShaderArchive-UE4_PakTest_Chunk0-GLSL_ES3_1_ANDROID.ushaderbytecode

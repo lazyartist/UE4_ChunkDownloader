@@ -18,6 +18,9 @@ class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 
 	void NativePreConstruct() override;
 
+	UPROPERTY(meta=(BindWidgetOptional))
+	UButton* DownloadButton_BP = nullptr;
+
 	// UPROPERTY(meta=(BindWidgetOptional))
 	// UButton* Download0Button_BP = nullptr;
 	//
@@ -38,6 +41,13 @@ class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 
 	// UPROPERTY(EditAnywhere)
 	// TArray<FString> mLevelNames;
+
+	UFUNCTION()
+	void DownloadButton_OnClicked();
+
+	UPROPERTY()
+	class UCMChunkDownloader* mChunkDownloader;
+	
 	//
 	// UFUNCTION()
 	// void Download0Button_OnClicked();

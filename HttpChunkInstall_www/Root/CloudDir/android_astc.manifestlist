@@ -1,22 +1,30 @@
 {
-	"ClientVersion": "Patch1",
-	"BuildUrl": "Patch1/Android_ASTC",
+	"ClientVersion": "Patch2",
+	"BuildUrl": "Patch2/Android_ASTC",
 	"files": [
 		{
-			"filename": "UE4_PakTest_pakchunk1000Patch1.manifest",
-			"uniqueFilename": "UE4_PakTest_pakchunk1000Patch1.manifest",
+			"filename": "UE4_PakTest_pakchunk1000Patch2.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk1000Patch2.manifest",
 			"length": 942,
-			"URL": "UE4_PakTest_pakchunk1000Patch1.manifest",
-			"hash": "49C89CD46A52EC787633552DF7309E17D3F8686B",
-			"hash256": "9301FDF751210876D7F9D83F59E86DECDB8A1D9AA93310BEC6D3F82566568596"
+			"URL": "UE4_PakTest_pakchunk1000Patch2.manifest",
+			"hash": "ECC8006B1F3F4B5392D6AD0417E8D0F053510860",
+			"hash256": "A400E897A29156B7544FEC8BF862296608CF632A15C4EA19B2B3E10AF9FD774E"
 		},
 		{
-			"filename": "UE4_PakTest_pakchunk1001Patch1.manifest",
-			"uniqueFilename": "UE4_PakTest_pakchunk1001Patch1.manifest",
+			"filename": "UE4_PakTest_pakchunk1001Patch2.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk1001Patch2.manifest",
 			"length": 942,
-			"URL": "UE4_PakTest_pakchunk1001Patch1.manifest",
-			"hash": "7A0FCBAB4C686EB07509B3A6EE8BC816FDAE5AD5",
-			"hash256": "649A00DCEEEA707B2189CA6B20B05C9B54E27A5667CC41331863095D073A5A61"
+			"URL": "UE4_PakTest_pakchunk1001Patch2.manifest",
+			"hash": "6D8795C2C480D3E37B87B5C59493598548478164",
+			"hash256": "65276032BBD1495BA08E1320EAE78CD1AD7E50169EB24B8E02313EDEC662AD4C"
+		},
+		{
+			"filename": "UE4_PakTest_pakchunk1002Patch2.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk1002Patch2.manifest",
+			"length": 942,
+			"URL": "UE4_PakTest_pakchunk1002Patch2.manifest",
+			"hash": "8B840A7A2D9C833E0007214C4963D2FFBD519073",
+			"hash256": "AEE494643E12524D99C8CE2316BC9602EBE58B662622F2E3A0569EEA9BB8243E"
 		}
 	]
 }

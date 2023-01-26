@@ -1,0 +1,14 @@
+{
+	"ClientVersion": "Release",
+	"BuildUrl": "Release/Android_ASTC",
+	"files": [
+		{
+			"filename": "UE4_PakTest_pakchunk1000Release.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk1000Release.manifest",
+			"length": 943,
+			"URL": "UE4_PakTest_pakchunk1000Release.manifest",
+			"hash": "CB2576AA3336B4F55876AA78B935A96FECCCA80D",
+			"hash256": "68400722A210F091744955EB3F8CED6CE26663C6FDC7F4835721276AF3FA8565"
+		}
+	]
+}

@@ -64,6 +64,9 @@ void ACMChunkDownloader::InitChunkDownloader(const FString& InBuildID, const FSt
 	SetChunkDownloaderStatus(EChunkDownloaderState::ManifestUpdate_Start);
 	
 	TSharedRef<FChunkDownloader> ChunkDownloader = FChunkDownloader::GetOrCreate();
+
+	ChunkDownloader->Finalize(); // 이미 Mount된 청크를 Unmount한다.
+	
 	ChunkDownloader->Initialize(InPlatformName, 8);
 	ChunkDownloader->LoadCachedBuild(InDeploymentName);
 
@@ -134,8 +137,6 @@ void ACMChunkDownloader::OnMountComplete(const bool bSuccess)
 	}
 
 	SetChunkDownloaderStatus(EChunkDownloaderState::Complete);
-	TSharedRef<FChunkDownloader> ChunkDownloader = FChunkDownloader::GetChecked();
-	ChunkDownloader->Finalize();
 }
 
 void ACMChunkDownloader::GetLoadingProgress(int32& BytesDownloaded, int32& TotalBytesToDownload, float& DownloadPercent, int32& ChunkMounted, int32& TotalChunksToMount, float& MountPercent) const

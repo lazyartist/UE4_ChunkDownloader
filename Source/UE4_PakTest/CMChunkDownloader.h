@@ -9,8 +9,31 @@
 
 #include "CMChunkDownloader.generated.h"
 
-/////////////////// ChunkDownloader ///////////////////
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPatchCompleteDelegate, const bool, Succeeded);
+
+UENUM()
+enum EChunkDownloaderState
+{
+	None,
+	
+	PatchVersionDownload_Start,
+	PatchVersionDownload_Succeed,
+	PatchVersionDownload_Fail,
+	
+	ManifestUpdate_Start,
+	ManifestUpdate_Succeed,
+	ManifestUpdate_Fail,
+	
+	DownloadChunks_Start,
+	DownloadChunks_Succeed,
+	DownloadChunks_Fail,
+	
+	Mount_Start,
+	Mount_Succeed,
+	Mount_Fail,
+	
+	Complete,
+};
 
 USTRUCT()
 struct FPPatchStats
@@ -35,37 +58,40 @@ struct FPPatchStats
 	UPROPERTY()
 	FText LastError;
 };
-/////////////////// ChunkDownloader /////////////////// end
 
-
-UCLASS()
-class UE4_PAKTEST_API UCMChunkDownloader : public UObject
+USTRUCT()
+struct FChunkDownloaderProgress
 {
 	GENERATED_BODY()
 
-// public:
-	// Sets default values for this actor's properties
-	// UPGGameInstance();
+	int32 mBytesDownloaded = 0;
+	int32 mTotalBytesToDownload = 0;
+	// float mDownloadPercent = 0.f;
+	int32 mChunkMounted = 0;
+	int32 mTotalChunksToMount = 0;
+	// float mMountPercent = 0.f;
+};
 
-// protected:
-// 	// Called when the game starts or when spawned
-// 	virtual void BeginPlay() override;
-//
-// public:
-// 	// Called every frame
-// 	virtual void Tick(float DeltaTime) override;
+DECLARE_DELEGATE_OneParam(FOnChunkDownloaderState_Updated, const EChunkDownloaderState);
+DECLARE_DELEGATE_OneParam(FOnChunkDownloaderProgress_Update, const FChunkDownloaderProgress&);
 
+UCLASS()
+class UE4_PAKTEST_API ACMChunkDownloader : public AActor
+{
+	GENERATED_BODY()
 
-	
-	/////////////////// ChunkDownloader ///////////////////
 public:
-	void InitPatchingSystem(const FString& InPatchPlatform, const FString& InPatchVersionURL, const TArray<int32>& InChunkDownloadList);
+	ACMChunkDownloader();
 	
+	void InitPatchingSystem(const FString& InPatchPlatform, const FString& InPatchVersionURL, const TArray<int32>& InChunkDownloadList);
+
+	virtual void Tick(float DeltaTime) override;
+
 protected:
-	void OnPatchingSystemVersionResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-	void InitChunkDownloader(const FString& BuildID);
+	void OnPatchVersionDownloadComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName);
 	void OnManifestUpdateComplete(const bool bSuccess);
-	void OnDownloadComplete(const bool bSuccess);
+	void OnDownloadChunksComplete(const bool bSuccess);
 	void OnLoadingModeComplete(const bool bSuccess);
 	void OnMountComplete(const bool bSuccess);
 
@@ -74,10 +100,10 @@ public:
 	void GetLoadingProgress(int32& BytesDownloaded, int32& TotalBytesToDownload, float& DownloadPercent, int32& ChunkMounted, int32& TotalChunksToMount, float& MountPercent) const;
 
 	UFUNCTION()
-	bool PatchGame();
+	bool DownloadChunks();
 
 	UFUNCTION()
-	const int32 GetChunkDownloaderListCount() const { return mChunkDownloadList.Num(); }
+	const int32 GetChunkDownloaderListCount() const { return mChunkIDsToDownload.Num(); }
 
 	UFUNCTION()
 	FPPatchStats GetPatchStatus();
@@ -85,20 +111,29 @@ public:
 	UFUNCTION()
 	void GetDiskTotalAndFreeSpace(const FString& InPath, uint64& TotalSpace, uint64& FreeSpace);
 
-public:
 	UPROPERTY()
 	FPatchCompleteDelegate OnPatchComplete;
 
+	FOnChunkDownloaderState_Updated OnChunkDownloaderState_Update;
+	
+	FOnChunkDownloaderProgress_Update OnChunkDownloaderProgress_Update;
+
+	EChunkDownloaderState GetChunkDownloaderStatus() { return mEChunkDownloaderState; };
+
 protected:
 	FString mPatchPlatform;
-	
+
 	UPROPERTY()
 	FString mPatchVersionURL;
 
 	bool bIsDownloadManifestUpToDate;
 
 	UPROPERTY()
-	TArray<int32> mChunkDownloadList;
-	/////////////////// ChunkDownloader /////////////////// end
-	
+	TArray<int32> mChunkIDsToDownload;
+
+	EChunkDownloaderState mEChunkDownloaderState = EChunkDownloaderState::None;
+
+private:
+	void SetChunkDownloaderStatus(const EChunkDownloaderState InEChunkDownloaderState);
+	void UpdateProgress();
 };

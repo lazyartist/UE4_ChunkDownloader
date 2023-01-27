@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
 #include "UMG.h"
+#include "CMChunkDownloader.h"
 
 #include "UIMain_Level0.generated.h"
 
@@ -17,9 +18,19 @@ class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 	GENERATED_BODY()
 
 	void NativePreConstruct() override;
+	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UPROPERTY(meta=(BindWidgetOptional))
 	UButton* DownloadButton_BP = nullptr;
+	
+	FString ChunkDownloaderStateLog;
+	
+	UPROPERTY(meta=(BindWidgetOptional))
+	UTextBlock* ChunkDownloaderStateText_BP = nullptr;
+	
+	UPROPERTY(meta=(BindWidgetOptional))
+	UTextBlock* ChunkDownloaderProgressText_BP = nullptr;
+
 
 	// UPROPERTY(meta=(BindWidgetOptional))
 	// UButton* Download0Button_BP = nullptr;
@@ -45,8 +56,11 @@ class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 	UFUNCTION()
 	void DownloadButton_OnClicked();
 
+	UFUNCTION()
+	void UpdateChunkDownloaderProgress(const FChunkDownloaderProgress& InChunkDownloaderProgress);
+
 	UPROPERTY()
-	class UCMChunkDownloader* mChunkDownloader;
+	class ACMChunkDownloader* mChunkDownloader;
 	
 	//
 	// UFUNCTION()

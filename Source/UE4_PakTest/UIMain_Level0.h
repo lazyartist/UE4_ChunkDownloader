@@ -20,8 +20,8 @@ class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 	void NativePreConstruct() override;
 	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	UPROPERTY(meta=(BindWidgetOptional))
-	UButton* DownloadButton_BP = nullptr;
+	// UPROPERTY(meta=(BindWidgetOptional))
+	// UButton* DownloadButton_BP = nullptr;
 	
 	FString ChunkDownloaderStateLog;
 	
@@ -55,6 +55,12 @@ class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 
 	UFUNCTION()
 	void DownloadButton_OnClicked();
+
+	UFUNCTION(BlueprintCallable)
+	void DownloadChunk();
+
+	UFUNCTION(BlueprintCallable)
+	void DownloadChunk_With_PatchVersionURL(const FString& InBuildID);
 
 	UFUNCTION()
 	void UpdateChunkDownloaderProgress(const FChunkDownloaderProgress& InChunkDownloaderProgress);

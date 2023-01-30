@@ -11,10 +11,10 @@ void UUIMain_Level0::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	if (IsValid(DownloadButton_BP))
-	{
-		DownloadButton_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::DownloadButton_OnClicked);
-	}
+	// if (IsValid(DownloadButton_BP))
+	// {
+	// 	DownloadButton_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::DownloadButton_OnClicked);
+	// }
 
 	// if(IsValid(Download0Button_BP))
 	// {
@@ -23,12 +23,12 @@ void UUIMain_Level0::NativePreConstruct()
 	//
 	// if(IsValid(Download1Button_BP))
 	// {
-	// 	Download1Button_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::Download0Button_OnClicked);
+	// 	Download1Button_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::Download1Button_OnClicked);
 	// }
 	//
 	// if(IsValid(Download2Button_BP))
 	// {
-	// 	Download2Button_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::Download0Button_OnClicked);
+	// 	Download2Button_BP->OnClicked.AddDynamic(this, &UUIMain_Level0::Download2Button_OnClicked);
 	// }
 	//
 	// if(IsValid(OpenLevel0Button_BP))
@@ -54,13 +54,18 @@ void UUIMain_Level0::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 void UUIMain_Level0::DownloadButton_OnClicked()
 {
+	DownloadChunk();
+}
+
+void UUIMain_Level0::DownloadChunk()
+{
 	UCMGameInstance* GameInstance = Cast<UCMGameInstance>(GetWorld()->GetGameInstance());
 	if (false == IsValid(GameInstance))
 	{
 		CM_LOG(Error, "UPGGameInstance is Wrong!!!");
 		return;
 	}
-
+	
 	if (false == IsValid(mChunkDownloader))
 	{
 		mChunkDownloader = NewObject<ACMChunkDownloader>(GetWorld());
@@ -92,7 +97,52 @@ void UUIMain_Level0::DownloadButton_OnClicked()
 
 		ChunkDownloaderStateLog.Empty();
 
-		mChunkDownloader->InitPatchingSystem("Android", GameInstance->PatchVersionURL, GameInstance->ChunkDownloadList);
+		mChunkDownloader->InitPatchingSystem("Android", GameInstance->ChunkDownloadList, GameInstance->PatchVersionURL);
+	}
+}
+
+void UUIMain_Level0::DownloadChunk_With_PatchVersionURL(const FString& InBuildID)
+{
+	UCMGameInstance* GameInstance = Cast<UCMGameInstance>(GetWorld()->GetGameInstance());
+	if (false == IsValid(GameInstance))
+	{
+		CM_LOG(Error, "UPGGameInstance is Wrong!!!");
+		return;
+	}
+	
+	if (false == IsValid(mChunkDownloader))
+	{
+		mChunkDownloader = NewObject<ACMChunkDownloader>(GetWorld());
+		// mChunkDownloader = NewObject<ACMChunkDownloader>(this);
+	}
+
+	if (IsValid(mChunkDownloader))
+	{
+		if (false == mChunkDownloader->OnChunkDownloaderState_Update.IsBound())
+		{
+			mChunkDownloader->OnChunkDownloaderState_Update.BindWeakLambda(this, [this](const EChunkDownloaderState InEChunkDownloaderStatus)
+			{
+				if (false == ChunkDownloaderStateLog.IsEmpty())
+				{
+					ChunkDownloaderStateLog.Append("\n");
+				}
+				ChunkDownloaderStateLog.Append(CMUtils::EnumToFString(TEXT("EChunkDownloaderState"), InEChunkDownloaderStatus));
+				ChunkDownloaderStateText_BP->SetText(FText::FromString(ChunkDownloaderStateLog));
+			});
+		}
+
+		if (false == mChunkDownloader->OnChunkDownloaderProgress_Update.IsBound())
+		{
+			mChunkDownloader->OnChunkDownloaderProgress_Update.BindWeakLambda(this, [this](const FChunkDownloaderProgress& InChunkDownloaderProgress)
+			{
+				UpdateChunkDownloaderProgress(InChunkDownloaderProgress);
+			});
+		}
+
+		ChunkDownloaderStateLog.Empty();
+
+		mChunkDownloader->InitPatchingSystem("Android", GameInstance->ChunkDownloadList);
+		mChunkDownloader->InitChunkDownloader(InBuildID, "Dev", "Android");
 	}
 }
 
@@ -131,6 +181,21 @@ void UUIMain_Level0::UpdateChunkDownloaderProgress(const FChunkDownloaderProgres
 		}
 	}
 }
+
+// void UUIMain_Level0::Download0Button_OnClicked()
+// {
+// 	DownloadChunk_With_PatchVersionURL();
+// }
+//
+// void UUIMain_Level0::OpenLevel1Button_OnClicked()
+// {
+// 	OpenLevel(mLevelNames[1]);
+// }
+//
+// void UUIMain_Level0::OpenLevel2Button_OnClicked()
+// {
+// 	OpenLevel(mLevelNames[2]);
+// }
 
 // void UUIMain_Level0::Download0Button_OnClicked()
 // {

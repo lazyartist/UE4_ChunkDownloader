@@ -83,13 +83,15 @@ class UE4_PAKTEST_API ACMChunkDownloader : public AActor
 public:
 	ACMChunkDownloader();
 	
-	void InitPatchingSystem(const FString& InPatchPlatform, const FString& InPatchVersionURL, const TArray<int32>& InChunkDownloadList);
-
 	virtual void Tick(float DeltaTime) override;
+	
+	void InitPatchingSystem(const FString& InPatchPlatform, const TArray<int32>& InChunkDownloadList, const FString& InPatchVersionURL);
+	void InitPatchingSystem(const FString& InPatchPlatform, const TArray<int32>& InChunkDownloadList);
 
+	void InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName);
+	
 protected:
 	void OnPatchVersionDownloadComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-	void InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName);
 	void OnManifestUpdateComplete(const bool bSuccess);
 	void OnDownloadChunksComplete(const bool bSuccess);
 	void OnLoadingModeComplete(const bool bSuccess);
@@ -121,7 +123,7 @@ public:
 	EChunkDownloaderState GetChunkDownloaderStatus() { return mEChunkDownloaderState; };
 
 protected:
-	FString mPatchPlatform;
+	FString mPlatformName;
 
 	UPROPERTY()
 	FString mPatchVersionURL;

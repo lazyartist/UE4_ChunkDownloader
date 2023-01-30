@@ -8,7 +8,7 @@ public class UE4_PakTest : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "MobilePatchingUtils", "ChunkDownloader", "HTTP" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "MobilePatchingUtils", "ChunkDownloader", "HTTP", "Json" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

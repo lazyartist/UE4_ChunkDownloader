@@ -26,10 +26,19 @@ void ACMChunkDownloader::OnPatchVersionDownloadComplete(FHttpRequestPtr Request,
 	{
 		SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionDownload_Succeed);
 		
-		const FString BuildId = Response->GetContentAsString(); // BuildId = v1.0.1, v1.0.2, ...
-		const FString DeploymentName = "Dev"; // DefaultGame.ini 파일의 [/Script/Plugins.ChunkDownloader Dev] 항목을 찾기 위한 이름, Dev 부분이 Dev, QA, Service 등으로 설정되어있다. 
-		const FString PlatformName = mPlatformName;
-		// const FString PlatformName = "Android";
+		const FString ResponseContent = Response->GetContentAsString(); // BuildId = v1.0.1, v1.0.2, ...
+		FString ResponseContentAsString = Response->GetContentAsString();
+		TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<TCHAR>::Create(ResponseContentAsString);
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+		FJsonSerializer::Deserialize(Reader, JsonObject);
+
+		const FString BuildId = JsonObject->GetStringField(TEXT("BuildId"));
+		const FString DeploymentName = JsonObject->GetStringField(TEXT("DeploymentName"));
+		const FString PlatformName = JsonObject->GetStringField(TEXT("PlatformName"));
+		
+		// const FString BuildId = Response->GetContentAsString(); // BuildId = v1.0.1, v1.0.2, ...
+		// const FString DeploymentName = "Dev"; // DefaultGame.ini 파일의 [/Script/Plugins.ChunkDownloader Dev] 항목을 찾기 위한 이름, Dev 부분이 Dev, QA, Service 등으로 설정되어있다. 
+		// const FString PlatformName = mPlatformName;
 		
 		CM_LOG(Log, "BuildId(%s), DeploymentName(%s), PlatformName(%s)", *BuildId, *DeploymentName, *PlatformName); 
 

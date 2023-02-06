@@ -91,7 +91,7 @@ public:
 // 	FString PatchPlatform;
 // 	
 	UPROPERTY(EditDefaultsOnly)
-	FString PatchVersionURL;
+	FString PatchVersionURL; // "http://10.10.11.159:18080/PatchVersion.json"
 //
 // 	bool bIsDownloadManifestUpToDate;
 //

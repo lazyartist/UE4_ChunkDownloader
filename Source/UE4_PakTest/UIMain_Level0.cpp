@@ -97,6 +97,7 @@ void UUIMain_Level0::DownloadChunk()
 
 		ChunkDownloaderStateLog.Empty();
 
+		// mChunkDownloader->InitPatchingSystem("Android", GameInstance->ChunkDownloadList, TEXT("http://10.10.11.159:18080/PatchVersion.json"));
 		mChunkDownloader->InitPatchingSystem("Android", GameInstance->ChunkDownloadList, GameInstance->PatchVersionURL);
 	}
 }

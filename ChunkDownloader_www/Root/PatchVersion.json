@@ -1,5 +1,11 @@
-﻿{
+{
 	"BuildId" : "Patch1",
 	"DeploymentName" : "Dev",
-	"PlatformName" : "Android"
+	"PlatformName" : "Android",
+	"ChunkIDsToDownload" : 
+	[
+		1000,
+		1001,
+		1002,
+	]
 }

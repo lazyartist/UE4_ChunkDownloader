@@ -1,0 +1,5 @@
+$NUM_ENTRIES = 3
+$BUILD_ID = Patch1
+pakchunk1000-Android_ASTC.pak	74524	hWY/SAc768KPCZJ/mI0HiC/m2xA=	1000	/Android_ASTC/pakchunk1000-Android_ASTC.pak
+pakchunk1001-Android_ASTC.pak	4064	YVcsmFq1AW+sjhH3gTzwt97XzcY=	1001	/Android_ASTC/pakchunk1001-Android_ASTC.pak
+pakchunk1002-Android_ASTC.pak	4054	f6n5BUnOr3Vzh5m4ycQh9XwMgw8=	1002	/Android_ASTC/pakchunk1002-Android_ASTC.pak

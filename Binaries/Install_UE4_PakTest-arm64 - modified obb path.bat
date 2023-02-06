@@ -11,7 +11,7 @@ for /f "delims=" %%A in ('%ADB% %DEVICE% shell "echo $EXTERNAL_STORAGE"') do @se
 %ADB% %DEVICE% uninstall com.a.pak
 @echo.
 @echo Installing existing application. Failures here indicate a problem with the device (connection or storage permissions) and are fatal.
-%ADB% %DEVICE% install Android/UE4_PakTest-arm64.apk
+%ADB% %DEVICE% install Android/UE4_PakTest-Android-Shipping_universal.apk
 @if "%ERRORLEVEL%" NEQ "0" goto Error
 %ADB% %DEVICE% shell rm -r %STORAGE%/UE4Game/UE4_PakTest
 %ADB% %DEVICE% shell rm -r %STORAGE%/UE4Game/UE4CommandLine.txt

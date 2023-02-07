@@ -183,7 +183,7 @@ void UUIMain_Level0::UpdateChunkDownloaderProgress(const FChunkDownloaderProgres
 	}
 }
 
-inline void UUIMain_Level0::InternalDownloadChunkData()
+void UUIMain_Level0::InternalDownloadChunkData()
 {
 	if (false == IsValid(mChunkDownloader))
 	{

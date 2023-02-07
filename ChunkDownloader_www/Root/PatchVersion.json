@@ -1,0 +1,11 @@
+{
+	"BuildId" : "0.0.1",
+	"DeploymentName" : "DevPrivate",
+	"PlatformName" : "Android",
+	"ChunkIDsToDownload" : 
+	[
+		1000,
+		1001,
+		1002,
+	]
+}

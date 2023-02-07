@@ -6,6 +6,7 @@
 #include "UObject/Object.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/IHttpRequest.h"
+#include "Tickable.h"
 
 #include "CMChunkDownloader.generated.h"
 
@@ -19,6 +20,9 @@ enum EChunkDownloaderState
 	PatchVersionDownload_Start,
 	PatchVersionDownload_Succeed,
 	PatchVersionDownload_Fail,
+
+	PatchVersionParsing_Succeed,
+	PatchVersionParsing_Fail,
 	
 	ManifestUpdate_Start,
 	ManifestUpdate_Succeed,
@@ -64,11 +68,11 @@ struct FChunkDownloaderProgress
 {
 	GENERATED_BODY()
 
-	int32 mBytesDownloaded = 0;
-	int32 mTotalBytesToDownload = 0;
+	uint64 mBytesDownloaded = 0;
+	uint64 mTotalBytesToDownload = 0;
 	// float mDownloadPercent = 0.f;
-	int32 mChunkMounted = 0;
-	int32 mTotalChunksToMount = 0;
+	int mChunkMounted = 0;
+	int mTotalChunksToMount = 0;
 	// float mMountPercent = 0.f;
 };
 
@@ -76,17 +80,20 @@ DECLARE_DELEGATE_OneParam(FOnChunkDownloaderState_Updated, const EChunkDownloade
 DECLARE_DELEGATE_OneParam(FOnChunkDownloaderProgress_Update, const FChunkDownloaderProgress&);
 
 UCLASS()
-class UE4_PAKTEST_API ACMChunkDownloader : public AActor
+class UE4_PAKTEST_API UCMChunkDownloader : public UObject, public FTickableGameObject
 {
 	GENERATED_BODY()
 
 public:
-	ACMChunkDownloader();
+	UCMChunkDownloader();
+	
+	~UCMChunkDownloader();
 	
 	virtual void Tick(float DeltaTime) override;
+	TStatId GetStatId() const;
 	
-	void InitPatchingSystem(const FString& InPatchPlatform, const TArray<int32>& InChunkDownloadList, const FString& InPatchVersionURL);
-	void InitPatchingSystem(const FString& InPatchPlatform, const TArray<int32>& InChunkDownloadList);
+	void InitPatchingSystem(const FString& InPatchVersionURL);
+	// void InitPatchingSystem(const FString& InPatchPlatform);
 
 	void InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName);
 	
@@ -122,8 +129,17 @@ public:
 
 	EChunkDownloaderState GetChunkDownloaderStatus() { return mEChunkDownloaderState; };
 
+	FString GetBuildID()
+	{
+		return mBuildID;
+	}
+
+	void Shutdown();
+
 protected:
 	FString mPlatformName;
+
+	FString mBuildID;
 
 	UPROPERTY()
 	FString mPatchVersionURL;
@@ -134,6 +150,8 @@ protected:
 	TArray<int32> mChunkIDsToDownload;
 
 	EChunkDownloaderState mEChunkDownloaderState = EChunkDownloaderState::None;
+
+	bool IsChunkDownloaderInitialized = false;
 
 private:
 	void SetChunkDownloaderStatus(const EChunkDownloaderState InEChunkDownloaderState);

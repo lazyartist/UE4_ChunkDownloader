@@ -65,8 +65,19 @@ class UE4_PAKTEST_API UUIMain_Level0 : public UUserWidget
 	UFUNCTION()
 	void UpdateChunkDownloaderProgress(const FChunkDownloaderProgress& InChunkDownloaderProgress);
 
+	EChunkDownloaderState mEChunkDownloaderState;
+
 	UPROPERTY()
-	class ACMChunkDownloader* mChunkDownloader;
+	class UCMChunkDownloader* mChunkDownloader;
+
+	UFUNCTION()
+	void InternalDownloadChunkData();
+
+	UFUNCTION()
+	void OnChunkDownloaderState_Update(const EChunkDownloaderState InEChunkDownloaderState);
+
+	UFUNCTION()
+	void OnChunkDownloaderProgress_Update(const FChunkDownloaderProgress& InChunkDownloaderProgress);
 	
 	//
 	// UFUNCTION()
@@ -91,3 +102,4 @@ public:
 	// UFUNCTION(BlueprintCallable)
 	// void RequestContent_OnFailed(FText ErrorText, int32 ErrorCode);
 };
+

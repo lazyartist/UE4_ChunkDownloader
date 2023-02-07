@@ -8,41 +8,70 @@
 #include "Math/UnitConversion.h"
 #include "CMCommon.h"
 
-ACMChunkDownloader::ACMChunkDownloader()
+UCMChunkDownloader::UCMChunkDownloader()
 {
-	PrimaryActorTick.bCanEverTick = true;
+
 }
 
-void ACMChunkDownloader::Tick(float DeltaSeconds)
+UCMChunkDownloader::~UCMChunkDownloader()
 {
-	Super::Tick(DeltaSeconds);
+	if(false == IsChunkDownloaderInitialized || EChunkDownloaderState::Complete != mEChunkDownloaderState)
+	{
+		Shutdown();
+	}
+}
 
+void UCMChunkDownloader::Tick(float DeltaSeconds)
+{
 	UpdateProgress();
 }
 
-void ACMChunkDownloader::OnPatchVersionDownloadComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+TStatId UCMChunkDownloader::GetStatId() const
+{
+	TStatId StatId;
+	return StatId;
+}
+
+void UCMChunkDownloader::OnPatchVersionDownloadComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	if (bWasSuccessful && Response.IsValid())
 	{
 		SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionDownload_Succeed);
 		
-		const FString ResponseContent = Response->GetContentAsString(); // BuildId = v1.0.1, v1.0.2, ...
 		FString ResponseContentAsString = Response->GetContentAsString();
 		TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<TCHAR>::Create(ResponseContentAsString);
 		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
-		FJsonSerializer::Deserialize(Reader, JsonObject);
+		if(false == FJsonSerializer::Deserialize(Reader, JsonObject) || false == JsonObject.IsValid())
+		{
+			SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionParsing_Fail);
+			return;
+		}
 
-		const FString BuildId = JsonObject->GetStringField(TEXT("BuildId"));
-		const FString DeploymentName = JsonObject->GetStringField(TEXT("DeploymentName"));
-		const FString PlatformName = JsonObject->GetStringField(TEXT("PlatformName"));
+		mBuildID = JsonObject->GetStringField(TEXT("BuildId")); // 0.0.1
+		// const FString BuildId = JsonObject->GetStringField(TEXT("BuildId")); // 0.0.1
+		const FString DeploymentName = JsonObject->GetStringField(TEXT("DeploymentName")); // Dev, QA, Service
+		const FString PlatformName = JsonObject->GetStringField(TEXT("PlatformName")); // Android, iOS
+		TArray<TSharedPtr<FJsonValue>> ChunkIDsToDownload = JsonObject->GetArrayField(TEXT("ChunkIDsToDownload")); // 10001, 10002, 10003, ...
+
+		mChunkIDsToDownload.Empty();
+		for (TSharedPtr<FJsonValue>& ChunkIDPtr : ChunkIDsToDownload)
+		{
+			int32 ChunkID;
+			if(ChunkIDPtr->TryGetNumber(ChunkID))
+			{
+				mChunkIDsToDownload.Add(ChunkID);
+			}
+		}
 		
 		// const FString BuildId = Response->GetContentAsString(); // BuildId = v1.0.1, v1.0.2, ...
 		// const FString DeploymentName = "Dev"; // DefaultGame.ini 파일의 [/Script/Plugins.ChunkDownloader Dev] 항목을 찾기 위한 이름, Dev 부분이 Dev, QA, Service 등으로 설정되어있다. 
 		// const FString PlatformName = mPlatformName;
 		
-		CM_LOG(Log, "BuildId(%s), DeploymentName(%s), PlatformName(%s)", *BuildId, *DeploymentName, *PlatformName); 
+		CM_LOG(Log, "BuildId(%s), DeploymentName(%s), PlatformName(%s)", *mBuildID, *DeploymentName, *PlatformName); 
 
-		InitChunkDownloader(BuildId, DeploymentName, PlatformName);
+		InitChunkDownloader(mBuildID, DeploymentName, PlatformName);
+		
+		SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionParsing_Succeed);
 	}
 	else
 	{
@@ -50,15 +79,17 @@ void ACMChunkDownloader::OnPatchVersionDownloadComplete(FHttpRequestPtr Request,
 	}
 }
 
-void ACMChunkDownloader::InitPatchingSystem(const FString& InPatchPlatform, const TArray<int32>& InChunkDownloadList, const FString& InPatchVersionURL)
+void UCMChunkDownloader::InitPatchingSystem(const FString& InPatchVersionURL)
 {
-	mPlatformName = InPatchPlatform;
-	mChunkIDsToDownload = InChunkDownloadList;
+	SetChunkDownloaderStatus(EChunkDownloaderState::None);
+	
+	// mPlatformName = InPatchPlatform;
+	// mChunkIDsToDownload = InChunkDownloadList;
 	mPatchVersionURL = InPatchVersionURL;
 
 	FHttpModule& Http = FHttpModule::Get();
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = Http.CreateRequest();
-	Request->OnProcessRequestComplete().BindUObject(this, &ACMChunkDownloader::OnPatchVersionDownloadComplete);
+	Request->OnProcessRequestComplete().BindUObject(this, &UCMChunkDownloader::OnPatchVersionDownloadComplete);
 
 	Request->SetURL(InPatchVersionURL);
 	Request->SetVerb("GET");
@@ -69,27 +100,29 @@ void ACMChunkDownloader::InitPatchingSystem(const FString& InPatchPlatform, cons
 	SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionDownload_Start);
 }
 
-void ACMChunkDownloader::InitPatchingSystem(const FString& InPatchPlatform, const TArray<int32>& InChunkDownloadList)
-{
-	mPlatformName = InPatchPlatform;
-	mChunkIDsToDownload = InChunkDownloadList;
-	// mPatchVersionURL = InPatchVersionURL;
+// void UCMChunkDownloader::InitPatchingSystem(const FString& InPatchPlatform)
+// {
+// 	// mPlatformName = InPatchPlatform;
+// 	// mChunkIDsToDownload = InChunkDownloadList;
+// 	// mPatchVersionURL = InPatchVersionURL;
+//
+// 	// FHttpModule& Http = FHttpModule::Get();
+// 	// TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = Http.CreateRequest();
+// 	// Request->OnProcessRequestComplete().BindUObject(this, &ACMChunkDownloader::OnPatchVersionDownloadComplete);
+// 	//
+// 	// Request->SetURL(InPatchVersionURL);
+// 	// Request->SetVerb("GET");
+// 	// Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+// 	// Request->SetHeader("Content-Type", TEXT("application/json"));
+// 	// Request->ProcessRequest();
+// 	//
+// 	// SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionDownload_Start);
+// }
 
-	// FHttpModule& Http = FHttpModule::Get();
-	// TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = Http.CreateRequest();
-	// Request->OnProcessRequestComplete().BindUObject(this, &ACMChunkDownloader::OnPatchVersionDownloadComplete);
-	//
-	// Request->SetURL(InPatchVersionURL);
-	// Request->SetVerb("GET");
-	// Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
-	// Request->SetHeader("Content-Type", TEXT("application/json"));
-	// Request->ProcessRequest();
-	//
-	// SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionDownload_Start);
-}
-
-void ACMChunkDownloader::InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName)
+void UCMChunkDownloader::InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName)
 {
+	IsChunkDownloaderInitialized = true;
+	
 	SetChunkDownloaderStatus(EChunkDownloaderState::ManifestUpdate_Start);
 	
 	TSharedRef<FChunkDownloader> ChunkDownloader = FChunkDownloader::GetOrCreate();
@@ -106,7 +139,7 @@ void ACMChunkDownloader::InitChunkDownloader(const FString& InBuildID, const FSt
 	ChunkDownloader->UpdateBuild(InDeploymentName, InBuildID, UpdateCompleteCallback);
 }
 
-void ACMChunkDownloader::OnManifestUpdateComplete(const bool bSuccess)
+void UCMChunkDownloader::OnManifestUpdateComplete(const bool bSuccess)
 {
 	bIsDownloadManifestUpToDate = bSuccess;
 
@@ -122,7 +155,7 @@ void ACMChunkDownloader::OnManifestUpdateComplete(const bool bSuccess)
 	}
 }
 
-void ACMChunkDownloader::OnDownloadChunksComplete(const bool bSuccess)
+void UCMChunkDownloader::OnDownloadChunksComplete(const bool bSuccess)
 {
 	if (bSuccess)
 	{
@@ -146,29 +179,28 @@ void ACMChunkDownloader::OnDownloadChunksComplete(const bool bSuccess)
 	}
 }
 
-void ACMChunkDownloader::OnLoadingModeComplete(const bool bSuccess)
+void UCMChunkDownloader::OnLoadingModeComplete(const bool bSuccess)
 {
 	CM_LOG(Log, "bSuccess(%d)", bSuccess);
 	// OnDownloadChunksComplete(bSuccess);
 }
 
-void ACMChunkDownloader::OnMountComplete(const bool bSuccess)
+void UCMChunkDownloader::OnMountComplete(const bool bSuccess)
 {
 	CM_LOG(Log, "bSuccess(%d)", bSuccess);
 	OnPatchComplete.Broadcast(bSuccess);
 	if(bSuccess)
 	{
 		SetChunkDownloaderStatus(EChunkDownloaderState::Mount_Succeed);
+		SetChunkDownloaderStatus(EChunkDownloaderState::Complete);
 	}
 	else
 	{
 		SetChunkDownloaderStatus(EChunkDownloaderState::Mount_Fail);
 	}
-
-	SetChunkDownloaderStatus(EChunkDownloaderState::Complete);
 }
 
-void ACMChunkDownloader::GetLoadingProgress(int32& BytesDownloaded, int32& TotalBytesToDownload, float& DownloadPercent, int32& ChunkMounted, int32& TotalChunksToMount, float& MountPercent) const
+void UCMChunkDownloader::GetLoadingProgress(int32& BytesDownloaded, int32& TotalBytesToDownload, float& DownloadPercent, int32& ChunkMounted, int32& TotalChunksToMount, float& MountPercent) const
 {
 	TSharedRef<FChunkDownloader> ChunkDownloader = FChunkDownloader::GetChecked();
 	FChunkDownloader::FStats LoadingStats = ChunkDownloader->GetLoadingStats();
@@ -183,7 +215,7 @@ void ACMChunkDownloader::GetLoadingProgress(int32& BytesDownloaded, int32& Total
 	MountPercent = ((float)ChunkMounted / (float)TotalChunksToMount) * 100.f;
 }
 
-bool ACMChunkDownloader::DownloadChunks()
+bool UCMChunkDownloader::DownloadChunks()
 {
 	auto EChunkStatusToString = [](FChunkDownloader::EChunkStatus In_EChunkStatus) -> FString
 	{
@@ -233,7 +265,7 @@ bool ACMChunkDownloader::DownloadChunks()
 	return false;
 }
 
-FPPatchStats ACMChunkDownloader::GetPatchStatus()
+FPPatchStats UCMChunkDownloader::GetPatchStatus()
 {
 	TSharedRef<FChunkDownloader> Downloader = FChunkDownloader::GetChecked();
 	FChunkDownloader::FStats LoadingStats = Downloader->GetLoadingStats();
@@ -248,7 +280,7 @@ FPPatchStats ACMChunkDownloader::GetPatchStatus()
 	return RetStats;
 }
 
-void ACMChunkDownloader::GetDiskTotalAndFreeSpace(const FString& InPath, uint64& TotalSpace, uint64& FreeSpace)
+void UCMChunkDownloader::GetDiskTotalAndFreeSpace(const FString& InPath, uint64& TotalSpace, uint64& FreeSpace)
 {
 	uint64 TotalDiskSpace = 0;
 	uint64 TotalDiskFreeSpace = 0;
@@ -262,7 +294,18 @@ void ACMChunkDownloader::GetDiskTotalAndFreeSpace(const FString& InPath, uint64&
 	FreeSpace = TotalDiskFreeSpace;
 }
 
-void ACMChunkDownloader::SetChunkDownloaderStatus(const EChunkDownloaderState InEChunkDownloaderState)
+void UCMChunkDownloader::Shutdown()
+{
+	if(IsChunkDownloaderInitialized)
+	{
+		TSharedRef<FChunkDownloader> ChunkDownloader = FChunkDownloader::GetChecked();
+		ChunkDownloader->Shutdown();
+	}
+	
+	IsChunkDownloaderInitialized = false;
+}
+
+void UCMChunkDownloader::SetChunkDownloaderStatus(const EChunkDownloaderState InEChunkDownloaderState)
 {
 	CM_LOG(Log, "InEChunkDownloaderStatus(%s)", *CMUtils::EnumToFString(TEXT("EChunkDownloaderState"), InEChunkDownloaderState));
 	
@@ -273,27 +316,34 @@ void ACMChunkDownloader::SetChunkDownloaderStatus(const EChunkDownloaderState In
 	UpdateProgress();
 }
 
-void ACMChunkDownloader::UpdateProgress()
+void UCMChunkDownloader::UpdateProgress()
 {
+	if(false == IsChunkDownloaderInitialized)
+	{
+		return;
+	}
+	
 	switch (mEChunkDownloaderState)
 	{
 	case None:
 	case PatchVersionDownload_Start:
 	case PatchVersionDownload_Succeed:
 	case PatchVersionDownload_Fail:
+	case PatchVersionParsing_Succeed:
+	case PatchVersionParsing_Fail:
 	case ManifestUpdate_Start:
 	case ManifestUpdate_Succeed:
 	case ManifestUpdate_Fail:
-	case Complete:
+	case DownloadChunks_Fail:
+	case Mount_Fail:
 		{
 		return;
 		}
 	case DownloadChunks_Start:
 	case DownloadChunks_Succeed:
-	case DownloadChunks_Fail:
 	case Mount_Start:
 	case Mount_Succeed:
-	case Mount_Fail:
+	case Complete:
 		break;
 	default: ;
 	}

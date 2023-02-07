@@ -68,7 +68,7 @@ void UUIMain_Level0::DownloadChunk()
 	
 	if (false == IsValid(mChunkDownloader))
 	{
-		mChunkDownloader = NewObject<ACMChunkDownloader>(GetWorld());
+		mChunkDownloader = NewObject<UCMChunkDownloader>(GetWorld());
 		// mChunkDownloader = NewObject<ACMChunkDownloader>(this);
 	}
 
@@ -98,7 +98,7 @@ void UUIMain_Level0::DownloadChunk()
 		ChunkDownloaderStateLog.Empty();
 
 		// mChunkDownloader->InitPatchingSystem("Android", GameInstance->ChunkDownloadList, TEXT("http://10.10.11.159:18080/PatchVersion.json"));
-		mChunkDownloader->InitPatchingSystem("Android", GameInstance->ChunkDownloadList, GameInstance->PatchVersionURL);
+		mChunkDownloader->InitPatchingSystem(GameInstance->PatchVersionURL);
 	}
 }
 
@@ -113,7 +113,7 @@ void UUIMain_Level0::DownloadChunk_With_PatchVersionURL(const FString& InBuildID
 	
 	if (false == IsValid(mChunkDownloader))
 	{
-		mChunkDownloader = NewObject<ACMChunkDownloader>(GetWorld());
+		mChunkDownloader = NewObject<UCMChunkDownloader>(GetWorld());
 		// mChunkDownloader = NewObject<ACMChunkDownloader>(this);
 	}
 
@@ -142,7 +142,7 @@ void UUIMain_Level0::DownloadChunk_With_PatchVersionURL(const FString& InBuildID
 
 		ChunkDownloaderStateLog.Empty();
 
-		mChunkDownloader->InitPatchingSystem("Android", GameInstance->ChunkDownloadList);
+		mChunkDownloader->InitPatchingSystem(GameInstance->PatchVersionURL);
 		mChunkDownloader->InitChunkDownloader(InBuildID, "Dev", "Android");
 	}
 }
@@ -180,6 +180,174 @@ void UUIMain_Level0::UpdateChunkDownloaderProgress(const FChunkDownloaderProgres
 			// 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, OutputStr);
 			// }
 		}
+	}
+}
+
+inline void UUIMain_Level0::InternalDownloadChunkData()
+{
+	if (false == IsValid(mChunkDownloader))
+	{
+		mChunkDownloader = NewObject<UCMChunkDownloader>(GetWorld());
+		// mChunkDownloader = NewObject<ACMChunkDownloader>(this);
+	}
+
+	if (IsValid(mChunkDownloader))
+	{
+		if (false == mChunkDownloader->OnChunkDownloaderState_Update.IsBound())
+		{
+			mChunkDownloader->OnChunkDownloaderState_Update.BindWeakLambda(this, [this](const EChunkDownloaderState InEChunkDownloaderStatus)
+			{
+				OnChunkDownloaderState_Update(InEChunkDownloaderStatus);
+			});
+		}
+
+		if (false == mChunkDownloader->OnChunkDownloaderProgress_Update.IsBound())
+		{
+			mChunkDownloader->OnChunkDownloaderProgress_Update.BindWeakLambda(this, [this](const FChunkDownloaderProgress& InChunkDownloaderProgress)
+			{
+				OnChunkDownloaderProgress_Update(InChunkDownloaderProgress);
+			});
+		}
+
+		UCMGameInstance* GameInstance = Cast<UCMGameInstance>(GetWorld()->GetGameInstance());
+		if (false == IsValid(GameInstance))
+		{
+			CM_LOG(Error, "UPGGameInstance is Wrong!!!");
+			return;
+		}
+
+		mChunkDownloader->InitPatchingSystem(GameInstance->PatchVersionURL);
+		
+		// ChunkDownloaderStateLog.Empty();
+		
+		// FServiceInfo ServiceInfo;
+		// if(TryGetCurrentServiceInfo(ServiceInfo))
+		// {
+		// 	ClearProgressBar();
+		// 	
+		// 	mChunkDownloader->InitPatchingSystem(ServiceInfo.PatchVersionURL);
+		// }
+	}
+}
+
+void UUIMain_Level0::OnChunkDownloaderState_Update(const EChunkDownloaderState InEChunkDownloaderState)
+{
+	mEChunkDownloaderState = InEChunkDownloaderState;
+	
+	CM_LOG(Log, "%s", *CMUtils::EnumToFString(TEXT("EChunkDownloaderState"), mEChunkDownloaderState));
+	
+	// if (false == ChunkDownloaderStateLog.IsEmpty())
+	// {
+	// 	ChunkDownloaderStateLog.Append("\n");
+	// }
+	// ChunkDownloaderStateLog.Append(CMUtils::EnumToFString(TEXT("EChunkDownloaderState"), mEChunkDownloaderState));
+	// ChunkDownloaderStateText_BP->SetText(FText::FromString(ChunkDownloaderStateLog));
+
+	switch (mEChunkDownloaderState)
+	{
+	case None: break;
+	case PatchVersionDownload_Start:
+	case PatchVersionDownload_Succeed:
+	case PatchVersionParsing_Succeed:
+	case ManifestUpdate_Start:
+	case ManifestUpdate_Succeed:
+	case DownloadChunks_Start:
+	case DownloadChunks_Succeed:
+	case Mount_Start:
+	case Mount_Succeed:
+		{
+			//
+		}
+		break;
+	case PatchVersionDownload_Fail:
+	case PatchVersionParsing_Fail:
+	case ManifestUpdate_Fail:
+	case DownloadChunks_Fail:
+	case Mount_Fail:
+		{
+			// SetAppInitStepType(ECM_AppInitStepType::Download_ChunkData_Fail);
+			// IsChunkDataComplete = false;
+			//
+			// DECLARE_GAMEINSTANCE()
+			// DECLARE_UI()
+			//
+			// FServiceInfo ServiceInfo;
+			// if (false == TryGetCurrentServiceInfo(ServiceInfo))
+			// {
+			// 	return;
+			// }
+			//
+			// UISystemManager->Open_YesNoPopup(*ServiceInfo.ServiceName, FString::Printf(TEXT("게임 리소스 다운로드에 실패했습니다.\n다시 시도하시겠습니까?\n(%s)"), *CMUtils::EnumToFString(TEXT("EChunkDownloaderState"), mEChunkDownloaderState)),
+			// // Yes
+			// [this](UCMPanelBase* InPanelBase)
+			// {
+			// 	DownloadServiceInfoFile(true);
+			// },
+			// // No
+			// [this](UCMPanelBase* InPanelBase)
+			// {
+			// 	//
+			// }, false);
+		}
+		break;
+	case Complete:
+		{
+			// SetAppInitStepType(ECM_AppInitStepType::Download_ChunkData_Succeed);
+			// IsChunkDataComplete = true;
+		}
+		break;
+	default: ;
+	}
+	
+	// UpdateReadyToLogin();
+}
+
+void UUIMain_Level0::OnChunkDownloaderProgress_Update(const FChunkDownloaderProgress& InChunkDownloaderProgress)
+{
+	if (IsValid(mChunkDownloader))
+	{
+		FString ChunkDownloaderProgress;
+
+		uint64 BytesDownloaded = InChunkDownloaderProgress.mBytesDownloaded;
+		uint64 TotalBytesToDownload = InChunkDownloaderProgress.mTotalBytesToDownload;
+		int ChunkMounted = InChunkDownloaderProgress.mChunkMounted;
+		int TotalChunksToMount = InChunkDownloaderProgress.mTotalChunksToMount;
+
+		FString ProgressText;
+		float CurruntProgress = 0.f;
+		if (0.f != TotalBytesToDownload)
+		{
+			CurruntProgress = ((float)BytesDownloaded / (float)TotalBytesToDownload);
+
+			// FServiceInfo ServiceInfo;
+			// if (false == TryGetCurrentServiceInfo(ServiceInfo))
+			// {
+			// 	return;
+			// }
+			
+			ProgressText = FString::Printf(TEXT("Resource Download(%s) %.1f%%(%.2f/%.2fMb)"), *mChunkDownloader->GetBuildID(), CurruntProgress * 100.f, ((float)BytesDownloaded/(float)(1024*1024)), ((float)TotalBytesToDownload/(float)(1024*1024)));
+		}
+			
+		float MountPercent = 0.f;
+		if (0.f != TotalChunksToMount)
+		{
+			MountPercent = ((float)ChunkMounted / (float)TotalChunksToMount) * 100.f;
+		}
+			
+		FString CurProgress, MaxProgress, OutputStr;
+		CurProgress = FString::SanitizeFloat(CurruntProgress);
+		OutputStr = CurProgress;
+
+		ChunkDownloaderProgress.Append(FString::Printf(TEXT("BytesDownloaded(%lld), TotalBytesToDownload(%lld), DownloadPercent(%f), ChunkMounted(%d), TotalChunksToMount(%d), MountPercent(%f)"), BytesDownloaded, TotalBytesToDownload, CurruntProgress, ChunkMounted, TotalChunksToMount, MountPercent));
+		ChunkDownloaderProgress.Append("\n");
+		ChunkDownloaderProgress.Append(FString::Printf(TEXT("CurProgress(%s), MaxProgress(%s), OutputStr(%s)"), *CurProgress, *MaxProgress, *OutputStr));
+
+		// ChunkDownloaderProgressText_BP->SetText(FText::FromString(ChunkDownloaderProgress));
+		// CM_LOG(Log, "%s", *ChunkDownloaderProgress);
+
+		// mTargetProgress = CurruntProgress;
+		
+		// SetProgressText(ProgressText);
 	}
 }
 

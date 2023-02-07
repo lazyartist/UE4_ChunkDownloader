@@ -1,0 +1,5 @@
+$NUM_ENTRIES = 3
+$BUILD_ID = 0.0.2
+pakchunk1000-Android_ASTC.pak	74049	lf14PHE+6TEv7LxRLfGVedEynog=	1000	/../Chunks/pakchunk1000-Android_ASTC.pak
+pakchunk1001-Android_ASTC.pak	3978	VeP4Nqy0rU/6gApxo5Aca4jQLeE=	1001	/../Chunks/pakchunk1001-Android_ASTC.pak
+pakchunk1002-Android_ASTC.pak	3974	6Z2iLDTp69L6ZVEQRGzDlimkjnI=	1002	/../Chunks/pakchunk1002-Android_ASTC.pak

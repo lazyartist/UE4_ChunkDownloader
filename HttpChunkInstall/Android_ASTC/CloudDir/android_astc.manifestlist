@@ -1,6 +1,6 @@
 {
-	"ClientVersion": "0.0.1",
-	"BuildUrl": "0.0.1/Android_ASTC",
+	"ClientVersion": "0.0.2",
+	"BuildUrl": "0.0.2/Android_ASTC",
 	"files": [
 		{
 			"filename": "UE4_PakTest_pakchunk10000.0.1.manifest",
@@ -9,6 +9,14 @@
 			"URL": "UE4_PakTest_pakchunk10000.0.1.manifest",
 			"hash": "41F1898F6C7A5685C2BBAE08786C132A3800D03A",
 			"hash256": "1917CA412F9EE21936FFCCFE1F8CF00887F67683D336DB678865CF9B3C60EB79"
+		},
+		{
+			"filename": "UE4_PakTest_pakchunk10000.0.2.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk10000.0.2.manifest",
+			"length": 941,
+			"URL": "UE4_PakTest_pakchunk10000.0.2.manifest",
+			"hash": "B845EFED256F71174F55285D7C0CDAC67579D3E9",
+			"hash256": "4ECBF086898EC890ABB831A772E01BD4272A52DBD61C0A974FD919C492CA5C67"
 		},
 		{
 			"filename": "UE4_PakTest_pakchunk1000Patch2.manifest",
@@ -35,6 +43,14 @@
 			"hash256": "5ABD6A004ACB8D7A2202EF847301955CC01B6A4306DFDACCB0275EB04ADAA92F"
 		},
 		{
+			"filename": "UE4_PakTest_pakchunk10010.0.2.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk10010.0.2.manifest",
+			"length": 941,
+			"URL": "UE4_PakTest_pakchunk10010.0.2.manifest",
+			"hash": "D3C9D51FC39C7D4717AAA306C7BA448C396C0ED2",
+			"hash256": "F27A4EBCFC4B01C262A5E7710A33DCE18AFFA48E8B7E2F8D83A8D4C2AC51515F"
+		},
+		{
 			"filename": "UE4_PakTest_pakchunk1001Patch2.manifest",
 			"uniqueFilename": "UE4_PakTest_pakchunk1001Patch2.manifest",
 			"length": 942,
@@ -57,6 +73,14 @@
 			"URL": "UE4_PakTest_pakchunk10020.0.1.manifest",
 			"hash": "5BF280326B6D301A27674E2AE54019A65C2FC946",
 			"hash256": "F76F08E4933AA592E8FB77283B4082131FC24690A0F17597D31DD1BA4F0E8831"
+		},
+		{
+			"filename": "UE4_PakTest_pakchunk10020.0.2.manifest",
+			"uniqueFilename": "UE4_PakTest_pakchunk10020.0.2.manifest",
+			"length": 941,
+			"URL": "UE4_PakTest_pakchunk10020.0.2.manifest",
+			"hash": "AF8E2605B57992F3441E0ACDF288138688760B56",
+			"hash256": "3CB85E89D05839FEF1101C372B23B7DBD44EF6E4EF8314F0479BA28201E23ACD"
 		},
 		{
 			"filename": "UE4_PakTest_pakchunk1002Patch2.manifest",

@@ -10,7 +10,6 @@
 
 UCMChunkDownloader::UCMChunkDownloader()
 {
-
 }
 
 UCMChunkDownloader::~UCMChunkDownloader()
@@ -83,8 +82,6 @@ void UCMChunkDownloader::InitPatchingSystem(const FString& InPatchVersionURL)
 {
 	SetChunkDownloaderStatus(EChunkDownloaderState::None);
 	
-	// mPlatformName = InPatchPlatform;
-	// mChunkIDsToDownload = InChunkDownloadList;
 	mPatchVersionURL = InPatchVersionURL;
 
 	FHttpModule& Http = FHttpModule::Get();
@@ -99,25 +96,6 @@ void UCMChunkDownloader::InitPatchingSystem(const FString& InPatchVersionURL)
 	
 	SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionDownload_Start);
 }
-
-// void UCMChunkDownloader::InitPatchingSystem(const FString& InPatchPlatform)
-// {
-// 	// mPlatformName = InPatchPlatform;
-// 	// mChunkIDsToDownload = InChunkDownloadList;
-// 	// mPatchVersionURL = InPatchVersionURL;
-//
-// 	// FHttpModule& Http = FHttpModule::Get();
-// 	// TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = Http.CreateRequest();
-// 	// Request->OnProcessRequestComplete().BindUObject(this, &ACMChunkDownloader::OnPatchVersionDownloadComplete);
-// 	//
-// 	// Request->SetURL(InPatchVersionURL);
-// 	// Request->SetVerb("GET");
-// 	// Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
-// 	// Request->SetHeader("Content-Type", TEXT("application/json"));
-// 	// Request->ProcessRequest();
-// 	//
-// 	// SetChunkDownloaderStatus(EChunkDownloaderState::PatchVersionDownload_Start);
-// }
 
 void UCMChunkDownloader::InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName)
 {
@@ -182,7 +160,6 @@ void UCMChunkDownloader::OnDownloadChunksComplete(const bool bSuccess)
 void UCMChunkDownloader::OnLoadingModeComplete(const bool bSuccess)
 {
 	CM_LOG(Log, "bSuccess(%d)", bSuccess);
-	// OnDownloadChunksComplete(bSuccess);
 }
 
 void UCMChunkDownloader::OnMountComplete(const bool bSuccess)

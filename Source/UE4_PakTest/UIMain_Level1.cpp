@@ -3,6 +3,3 @@
 
 #include "UIMain_Level1.h"
 
-void UUIMain_Level1::PrevLevelButton_OnClicked()
-{
-}

@@ -15,10 +15,4 @@ UCLASS()
 class UE4_PAKTEST_API UUIMain_Level1 : public UUserWidget
 {
 	GENERATED_BODY()
-
-	UPROPERTY(meta=(BindWidgetOptional))
-	UButton* PrevLevelButton_BP = nullptr;
-
-	UFUNCTION()
-	void PrevLevelButton_OnClicked();
 };

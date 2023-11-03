@@ -93,7 +93,6 @@ public:
 	TStatId GetStatId() const;
 	
 	void InitPatchingSystem(const FString& InPatchVersionURL);
-	// void InitPatchingSystem(const FString& InPatchPlatform);
 
 	void InitChunkDownloader(const FString& InBuildID, const FString& InDeploymentName, const FString& InPlatformName);
 	

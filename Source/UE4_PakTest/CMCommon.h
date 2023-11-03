@@ -15,7 +15,6 @@ namespace CMUtils
 		if (Enums == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Can't convert : %s, %d"), InEnumTypeName, static_cast<int32>(EnumValue));
-			// CM_LOG(Error, "Can't convert : %s, %d", InEnumTypeName, static_cast<int32>(EnumValue));
 			static FString FailString(TEXT("[Fail]"));
 			return FailString;
 		}

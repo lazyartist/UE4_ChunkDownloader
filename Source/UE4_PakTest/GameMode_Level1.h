@@ -14,7 +14,6 @@ class UE4_PAKTEST_API AGameMode_Level1 : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AGameMode_Level1();
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
